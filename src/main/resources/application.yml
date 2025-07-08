@@ -2,5 +2,18 @@ spring:
   application:
     name: apigateway
 
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8091/realms/ticketing-security-realm
+
 server:
   port: 8090
+
+#Keycloak
+
+keycloak:
+  auth:
+    jwk-set-uri: http://localhost:8091/realms/ticketing-security-realm/protocol/openid-connect/certs
