@@ -12,8 +12,42 @@ spring:
 server:
   port: 8090
 
-#Keycloak
-
 keycloak:
   auth:
     jwk-set-uri: http://localhost:8091/realms/ticketing-security-realm/protocol/openid-connect/certs
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 8
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 4
+        wait-duration-in-open-state:
+          seconds: 5
+        permitted-number-of-calls-in-half-open-state: 2
+        automatic-transition-from-open-to-half-open-enabled: true
+  timelimiter:
+    configs:
+      default:
+        timeout-duration:
+          seconds: 3
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration:
+          seconds: 2
+
