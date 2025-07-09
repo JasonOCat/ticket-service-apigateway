@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.function.*;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
+
 @Configuration
 public class InventoryServiceRoutes {
 
@@ -39,5 +41,14 @@ public class InventoryServiceRoutes {
     ) throws Exception {
         String value = request.pathVariable(pathVariable);
         return HandlerFunctions.http(baseUrl + value).handle(request);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> inventoryServiceApiDocs() {
+        return GatewayRouterFunctions.route("inventory-service-api-docs")
+                .route(RequestPredicates.path("/docs/inventoryservice/v3/api-docs"),
+                        HandlerFunctions.http("http://localhost:8080"))
+                .filter(setPath("/v3/api-docs"))
+                .build();
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.servlet.function.ServerResponse;
 
 import java.net.URI;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
+
 @Configuration
 public class BookingServiceRoutes {
 
@@ -50,6 +52,16 @@ public class BookingServiceRoutes {
                         request -> ServerResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
                                 .body("Booking service is down")
                 )
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> bookingServiceApiDocs() {
+        return GatewayRouterFunctions.route("booking-service-api-docs")
+                .route(RequestPredicates.path("/docs/bookingservice/v3/api-docs"),
+                        HandlerFunctions.http("http://localhost:8081"))
+                // replace http://localhost:8081/docs/bookingservice/v3/api-docs -> http://localhost:8081/v3/api-docs
+                .filter(setPath("/v3/api-docs"))
                 .build();
     }
 }

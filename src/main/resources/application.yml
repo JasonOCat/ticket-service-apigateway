@@ -51,3 +51,19 @@ resilience4j:
         wait-duration:
           seconds: 2
 
+#OpenAPI
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls[0]:
+      name: InventoryService
+      url: /docs/inventoryservice/v3/api-docs
+    urls[1]:
+      name: BookingService
+      url: /docs/bookingservice/v3/api-docs
+
+security:
+  excluded:
+    urls: /swagger-ui.html, /swagger-ui/**, /docs/**, /v3/api-docs/**, /swagger-resources/**, /api-docs/**
